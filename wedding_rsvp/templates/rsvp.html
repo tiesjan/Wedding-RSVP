@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% set page_title = "Zhen & Ties Jan 🕊️" %}
+
+{% block page_scripts %}
+<script>
+"use strict";
+
+{
+    window.addEventListener(
+        "load",
+        () => {
+            const present_guest_details = document.querySelector("#present-guest-details");
+            const rsvp_form = document.querySelector("#rsvp-form");
+
+            rsvp_form.guest_present.forEach(
+                option => option.addEventListener(
+                    "change",
+                    () => present_guest_details.hidden = (rsvp_form.guest_present.value !== "True")
+                )
+            );
+
+            rsvp_form.addEventListener(
+                "submit",
+                () => {
+                    if (rsvp_form.guest_present.value !== "True") {
+                        present_guest_details.querySelectorAll("input").forEach(
+                            input => {
+                                if (input.type === "checkbox" || input.type === "radio") {
+                                    input.checked = false;
+                                }
+                                else {
+                                    input.value = "";
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+
+            present_guest_details.hidden = (rsvp_form.guest_present.value !== "True");
+        }
+    );
+}
+</script>
+{% endblock %}
+
+{% block page_content %}
+{% if form_enabled is false -%}
+<div class="alert alert-warning margin-bottom-large">Het aanmeldformulier is gesloten.</div>
+{%- endif %}
+
+{% for category, message in get_flashed_messages(with_categories=True) %}
+<div class="row">
+    <input class="alert-state" id="alert-{{ loop.index }}" type="checkbox">
+    <div class="alert alert-{{ category }} dismissible">
+        <span>{{ message }}</span>
+        <label class="btn-close" for="alert-{{ loop.index }}">X</label>
+    </div>
+</div>
+{% endfor %}
+
+<form id="rsvp-form" method="POST" novalidate>
+    {{ form.csrf_token }}
+
+    <div class="row">
+        <fieldset class="col form-group"{% if form_enabled is false %} disabled{% endif %}>
+            {{ form.guest_first_name.label }}{{ form.guest_first_name }}
+            {% for error in form.guest_first_name.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+        </fieldset>
+    </div>
+
+    <div class="row">
+        <fieldset class="form-group"{% if form_enabled is false %} disabled{% endif %}>
+            {{ form.guest_last_name.label }}{{ form.guest_last_name }}
+            {% for error in form.guest_last_name.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+        </fieldset>
+    </div>
+
+    <div class="row">
+        <fieldset class="col form-group"{% if form_enabled is false %} disabled{% endif %}>
+            <legend>{{ form.guest_present.label }}</legend>
+            {% for choice in form.guest_present %}
+            <label class="paper-radio" for="{{ choice.label.field_id }}">{{ choice }}<span>{{ choice.label.text }}</span></label>
+            {% endfor %}
+            {% for error in form.guest_present.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+        </fieldset>
+    </div>
+
+    <div id="present-guest-details" hidden>
+        <fieldset class="col form-group"{% if form_enabled is false %} disabled{% endif %}>
+            <legend>Bij welke onderdelen ben je aanwezig?</legend>
+            <label class="paper-check" for="{{ form.guest_present_ceremony.label.field_id }}">{{ form.guest_present_ceremony }}<span>{{ form.guest_present_ceremony.label.text }}</span></label>
+            {% for error in form.guest_present_ceremony.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            <label class="paper-check" for="{{ form.guest_present_reception.label.field_id }}">{{ form.guest_present_reception }}<span>{{ form.guest_present_reception.label.text }}</span></label>
+            {% for error in form.guest_present_reception.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            <label class="paper-check" for="{{ form.guest_present_dinner.label.field_id }}">{{ form.guest_present_dinner }}<span>{{ form.guest_present_dinner.label.text }}</span></label>
+            {% for error in form.guest_present_dinner.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+        </fieldset>
+
+        <div class="row">
+            <fieldset class="form-group"{% if form_enabled is false %} disabled{% endif %}>
+                {{ form.guest_email.label }}{{ form.guest_email }}
+                {% for error in form.guest_email.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            </fieldset>
+        </div>
+
+        <div class="row">
+            <fieldset class="col form-group"{% if form_enabled is false %} disabled{% endif %}>
+                <legend>Wat zijn je dieetwensen?</legend>
+                <label class="paper-check" for="{{ form.guest_diet_meat.label.field_id }}">{{ form.guest_diet_meat }}<span>{{ form.guest_diet_meat.label.text }}</span></label>
+                {% for error in form.guest_diet_meat.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                <label class="paper-check" for="{{ form.guest_diet_fish.label.field_id }}">{{ form.guest_diet_fish }}<span>{{ form.guest_diet_fish.label.text }}</span></label>
+                {% for error in form.guest_diet_fish.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                <label class="paper-check" for="{{ form.guest_diet_vega.label.field_id }}">{{ form.guest_diet_vega }}<span>{{ form.guest_diet_vega.label.text }}</span></label>
+                {% for error in form.guest_diet_vega.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            </fieldset>
+        </div>
+
+        {% if with_partner %}
+        <div class="row">
+            <fieldset class="form-group"{% if form_enabled is false %} disabled{% endif %}>
+                {{ form.partner_first_name.label }}{{ form.partner_first_name }}
+                {% for error in form.partner_first_name.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            </fieldset>
+        </div>
+
+        <div class="row">
+            <fieldset class="form-group"{% if form_enabled is false %} disabled{% endif %}>
+                {{ form.partner_last_name.label }}{{ form.partner_last_name }}
+                {% for error in form.partner_last_name.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            </fieldset>
+        </div>
+
+        <div class="row">
+            <fieldset class="col form-group"{% if form_enabled is false %} disabled{% endif %}>
+                <legend>Wat zijn je partner's dieetwensen?</legend>
+                <label class="paper-check" for="{{ form.partner_diet_meat.label.field_id }}">{{ form.partner_diet_meat }}<span>{{ form.partner_diet_meat.label.text }}</span></label>
+                {% for error in form.partner_diet_meat.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                <label class="paper-check" for="{{ form.partner_diet_fish.label.field_id }}">{{ form.partner_diet_fish }}<span>{{ form.partner_diet_fish.label.text }}</span></label>
+                {% for error in form.partner_diet_fish.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                <label class="paper-check" for="{{ form.partner_diet_vega.label.field_id }}">{{ form.partner_diet_vega }}<span>{{ form.partner_diet_vega.label.text }}</span></label>
+                {% for error in form.partner_diet_vega.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            </fieldset>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <fieldset class="form-group"{% if form_enabled is false %} disabled{% endif %}>
+                {{ form.remarks.label }}{{ form.remarks }}
+                {% for error in form.remarks.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+            </fieldset>
+        </div>
+    </div>
+
+    {% if form_enabled is true %}<input type="submit" value="{{ 'Verzenden!' }}">{% endif %}
+</form>
+{% endblock %}

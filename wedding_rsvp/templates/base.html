@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/papercss@1.x/dist/paper.min.css" rel="stylesheet">
+    <title>{{ page_title }}</title>
+    {% block page_scripts %}{% endblock %}
+</head>
+
+<body>
+    <div class="paper container container-lg margin-bottom margin-top padding-top-small">
+        <div class="row flex-edges">
+            <h3 class="col margin-small padding-left-none">{{ page_title }}</h3>
+        </div>
+        {% block page_content %}{% endblock %}
+    </div>
+</body>
+</html>

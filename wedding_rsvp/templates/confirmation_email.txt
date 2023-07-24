@@ -1,0 +1,7 @@
+Beste {{ first_name }},
+
+Bedankt voor het aanmelden voor de bruiloft van Zhen & Ties Jan. Wij kijken graag uit naar je komst!
+
+Je kunt je aanmelding tot {{ config.RSVP_DEADLINE.strftime('%d/%m/%Y') }} aanpassen op: {{ rsvp_url }}. Mocht je daarna nog iets willen aanpassen, mail dan naar: {{ config.MAIL_DEFAULT_SENDER }}.
+
+Groeten, Zhen & Ties Jan
